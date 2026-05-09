@@ -1,19 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: web-deployment
+
 spec:
-  replicas: 6   # You can adjust the number of replicas as needed
+  replicas: 6
+
   selector:
     matchLabels:
       app: web
+
   template:
     metadata:
       labels:
         app: web
+
     spec:
       containers:
       - name: web
-        image: httpd   # Replace with the actual image tag
+        image: httpd:2.4
+
         ports:
         - containerPort: 80
+
+        command:
+        - /bin/sh
+        - -c
+
+        args:
+        - |
+          echo "<h1>Argo CD Test Application</h1>" > /usr/local/apache2/htdocs/index.html
+          echo "<h2>Deployment Version V1</h2>" >> /usr/local/apache2/htdocs/index.html
+          echo "<p>Kubernetes + Argo CD Working Successfully</p>" >> /usr/local/apache2/htdocs/index.html
+          httpd-foreground
